@@ -1,0 +1,32 @@
+# AUTOCC 0.1.6-2
+# CONFIGURATION FILE 'autocc.toml' IS WRITTEN BY AUTOCC 0.1.6-2, MAKE SURE YOU HAVE AN APPROPRIATE AUTOCC BUILD.
+# COPYRIGHT (C) assembler-0 2025
+[compilers]
+ar = 'ar'
+as = 'nasm'
+cc = 'clang'
+cxx = 'clang++'
+launcher = ''
+sl = 'clang++'
+
+[features]
+use_pch = true
+
+[paths]
+exclude_patterns = []
+include_dirs = []
+
+[project]
+build_dir = '.autocc_build'
+default_target = 'main'
+
+[[targets]]
+cflags = '-std=c11'
+cxxflags = '-std=c++20'
+exclude_patterns = []
+external_libs = []
+main_file = './Main.cpp'
+name = 'main'
+output_name = 'main'
+sources = [ './Main.cpp' ]
+type = 'Executable'
