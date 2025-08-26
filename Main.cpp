@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <windows.h>
+
 namespace fs = std::filesystem;
 static fs::path main_direc = "./data";
 
@@ -124,7 +124,6 @@ bool login(std::string &password) {
                 for (int i = wait_time; i > 0; i--) {
                     std::cout << "\rRetry available in: " << i << " seconds..";
                     std::cout.flush();
-                    Sleep(1000);
                 }
 
                 std::cout << "\nYou may try again now. ";
