@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <iostream>
 #include <filesystem>
 #include <fstream>
@@ -6,6 +7,43 @@
 
 namespace fs = std::filesystem;
 static fs::path main_direc = "./data";
+static constexpr auto USER_DATA_PREFIX = "Userdata_";
+
+typedef struct {
+    uint32_t id;
+    int64_t balance;
+    std::string username;
+    std::string password;
+    uint16_t pin;
+} UserContext;
+
+fs::path GetUserFolder(const std::string& username) {
+    return main_direc / (USER_DATA_PREFIX + username);
+}
+
+fs::path GetUserDataFile(const fs::path& path, const std::string& username) {
+    return path / ("UserData_" + username + ".txt");
+}
+
+int save_data(const UserContext& ctx) {
+    try {
+        if (!fs::exists(main_direc)) fs::create_directory(main_direc);
+        fs::path userfolder = GetUserFolder(ctx.username);
+        fs::create_directory(userfolder);
+        fs::path userdatafile = GetUserDataFile(userfolder, ctx.username);
+        std::ofstream f(userdatafile);
+        if (!f.is_open()) return 1;
+        f << ctx.username << '\n';
+        f << ctx.password << '\n';
+        f << ctx.balance << '\n';
+        f << ctx.pin << '\n';
+        f.close();
+    } catch (fs::filesystem_error& e) {
+        std::cout << "Error " << e.what();
+        return 1;
+    }
+    return 0;
+}
 
 void save_data(std::string &username, std::string &password, int &balance, int &PIN) {
     if (!(fs::exists(main_direc))) {
@@ -120,7 +158,7 @@ bool login(std::string &password) {
             tries++;
 
             if (tries >= 3) {
-                std::cout << "Too many failed attempts. Please wait before retrying.\n";    
+                std::cout << "Too many failed attempts. Please wait before retrying.\n";
                 for (int i = wait_time; i > 0; i--) {
                     std::cout << "\rRetry available in: " << i << " seconds..";
                     std::cout.flush();
@@ -295,7 +333,6 @@ int main() {
     int lbalance, lpin;
     char ops;
 
-    system("cls");  
     std::cout << "=== Welcome to ATM System ===" << std::endl;
 
     while (true) {
@@ -305,7 +342,7 @@ int main() {
 
         switch (ops) {
             case 'l':
-            case 'L': 
+            case 'L':
                 while (true) {
                     std::cout << "Enter your username: ";
                     std::cin >> lusername;
@@ -323,7 +360,7 @@ int main() {
              } break;
 
             case 'y':
-            case 'Y': 
+            case 'Y':
                 std::cout << "Creating a new account for you . . .\n";
                 new_account();
                 break;
